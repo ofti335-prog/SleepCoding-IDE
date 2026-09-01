@@ -1,212 +1,441 @@
-leepCoding IDE
+# 🌙 SleepCoding IDE
 
-A lightweight, Windows-focused Electron IDE inspired by VS Code and JetBrains IDEs.
+> A modern, lightweight desktop IDE for Windows built with Electron, Monaco Editor, Node.js and more.
 
-Version: 1.7.1 · License: MIT · Recommended: Windows 10/11 + Node.js 20 LTS
+![SleepCoding](https://img.shields.io/badge/SleepCoding-IDE-blue)
+![Electron](https://img.shields.io/badge/Electron-30-47848F)
+![Platform](https://img.shields.io/badge/Platform-Windows-0078D6)
 
-Repository: https://github.com/ofti335-prog/SleepCoding-IDE
+GitHub: https://github.com/ofti335-prog/SleepCoding-IDE
 
-✨ Features
+---
 
-Monaco Editor with IntelliSense and multi-file tabs
+## ✨ Features
 
-1/2/3 editor groups + draggable tabs
+- 🧠 Monaco Editor + IntelliSense
+- 🔥 Command Palette
+- 🔎 Global project search
+- 🐞 Node.js Debugger
+- ▶️ Run / Stop / Restart
+- 🖥️ Integrated Terminal
+- 🌿 Git integration
+- 📑 Split Editor
+- 🔍 Minimap / Outline / Breadcrumbs
+- 💾 Autosave
+- ↩️ Snapshots / file recovery
+- 🎨 Dark / Midnight / Light themes
+- 📝 Markdown Preview
+- 🌐 HTML/CSS Live Preview
+- 🐍 Python support
+- 🟨 Node.js support
+- 📦 npm / pip tools
+- 🧩 Extension-ready architecture
+- 🔗 P2P collaboration
+- 👥 Remote cursors
+- 💬 Collaborative chat
+- 🚀 Modern startup screen with real loading progress
 
-Command Palette and global project search
+---
 
-Integrated Terminal (node-pty)
+# 🚀 Installation
 
-Node.js and Python run support
+## Requirements
 
-Node.js Debugger with breakpoints, pause/continue, stepping and evaluation
+Recommended:
 
-Git integration and GitHub workflow helpers
+- Windows 10 / 11
+- Node.js 20 LTS
+- npm
+- Git
+- Visual Studio Build Tools 2022
 
-Markdown preview and HTML/CSS live preview
+For `node-pty`, install:
 
-SleepCoding Dark, Midnight and Light themes
+**Desktop development with C++**
 
-P2P collaboration and chat
+from Visual Studio Installer.
 
-Adaptive JetBrains/VS Code-style UI
+Check your environment:
 
-PyCharm-inspired startup splash with boot progress
+```powershell
+node --version
+npm --version
+git --version
+📥 Clone from GitHub
 
-Windows installer (NSIS) and portable build
-
-🚀 Quick Start (Windows)
-
-1. Install requirements
-
-Windows 10/11 x64
-
-Node.js 20 LTS
-
-Git
-
-Visual Studio 2022 Build Tools with Desktop development with C++ (needed for native modules such as node-pty)
-
-2. Clone the repository
+Open PowerShell or Command Prompt:
 
 git clone https://github.com/ofti335-prog/SleepCoding-IDE.git
 cd SleepCoding-IDE
 
-Or download the ZIP from GitHub and open a terminal in the extracted folder.
+Check the project files:
 
-3. Allow Electron and node-pty install scripts
+dir
 
-Some npm configurations block lifecycle scripts. SleepCoding needs the install scripts of Electron and node-pty.
+You should see files such as:
+
+package.json
+package-lock.json
+main.js
+preload.js
+app.js
+index.html
+ide.css
+📦 Install Dependencies
+
+First allow installation scripts required by Electron and node-pty:
 
 npm install-scripts approve electron node-pty
 
-If npm reports that scripts are still blocked:
+Make sure npm scripts are enabled:
 
 npm config set ignore-scripts false
 
-4. Install dependencies
+Install dependencies:
 
 npm install
 
-For a clean checkout with package-lock.json, you can use:
-
-npm ci
-
-5. Start SleepCoding
-
-npm start
-
-The startup splash will wait for the main renderer services and Monaco to initialize before showing the IDE.
-
-6. Check Electron (optional)
+Check Electron:
 
 npx electron --version
 
-For this release, Electron 30.x is expected.
+Expected:
 
-🛠️ Build setup.exe
+v30.x.x
+▶️ Start SleepCoding
 
-Build on Windows from a clean dependency tree:
+Run:
 
-Remove-Item -Recurse -Force node_modules, dist -ErrorAction SilentlyContinue
+npm start
+
+SleepCoding will start with its startup screen and load the IDE after the required components are ready.
+
+🧹 If Something Goes Wrong
+
+If Electron or node-pty was installed incorrectly:
+
+PowerShell
+Remove-Item -Recurse -Force node_modules
 npm install
+
+Then:
+
+npm start
+
+For native module problems:
+
+npm run rebuild
+
+Do not use npm audit fix --force unless you know which packages will be changed.
+
+🖥️ How to Use
+Open a Project
+
+Use:
+
+File → Open Folder
+
+Select your project directory.
+
+Example:
+
+MyProject/
+├── src/
+│   ├── app.js
+│   └── styles.css
+├── package.json
+└── README.md
+
+Click files in Explorer to open them.
+
+✍️ Code Editor
+
+SleepCoding uses Monaco Editor.
+
+Included:
+
+Syntax highlighting
+IntelliSense
+Autocomplete
+Code folding
+Minimap
+Breadcrumbs
+Outline
+Multiple tabs
+Undo / Redo
+Autosave
+
+Save:
+
+Ctrl + S
+
+Command Palette:
+
+Ctrl + Shift + P
+📑 Split Editor
+
+Create another editor group:
+
+Ctrl + \
+
+You can work with multiple files at the same time and move tabs between editor groups.
+
+🔎 Search
+
+Use the Search panel to search through the whole project.
+
+Search results can open the matching file and line directly.
+
+🖥️ Terminal
+
+Use the integrated terminal for normal development commands:
+
+npm install
+npm run dev
+npm run build
+git status
+python main.py
+node app.js
+▶️ Run / Stop / Restart
+
+SleepCoding can manage running processes.
+
+Typical commands:
+
+Run
+Stop
+Restart
+
+Node.js:
+
+node app.js
+
+Python:
+
+python main.py
+
+npm project:
+
+npm run dev
+🐞 Node.js Debugger
+
+SleepCoding includes a Node.js debugger using the Node Inspector protocol.
+
+Basic workflow:
+
+Open a .js file.
+Click next to the line number to create a breakpoint.
+Open the Debug panel.
+Start Debug.
+Wait until execution stops at the breakpoint.
+
+Debugger controls:
+
+Continue
+Pause
+Step Over
+Step Into
+Step Out
+Breakpoints
+Expression evaluation
+Call stack
+🌿 Git
+
+SleepCoding works with normal Git repositories.
+
+Clone:
+
+git clone https://github.com/username/project.git
+cd project
+
+Check changes:
+
+git status
+
+Stage:
+
+git add .
+
+Commit:
+
+git commit -m "Update project"
+
+Push:
+
+git push
+
+Pull:
+
+git pull
+
+You can also use the integrated terminal and Git interface.
+
+🐍 Python
+
+Check Python:
+
+python --version
+
+Install dependencies:
+
+pip install -r requirements.txt
+
+Run:
+
+python main.py
+🟨 Node.js
+
+Create a project:
+
+npm init -y
+
+Install dependencies:
+
+npm install
+
+Run:
+
+node app.js
+
+or:
+
+npm run dev
+📝 Markdown
+
+Open a .md file such as:
+
+README.md
+
+Use Markdown Preview to see the rendered document.
+
+🌐 HTML / CSS
+
+Typical web project:
+
+Website/
+├── index.html
+├── style.css
+└── script.js
+
+Use the Live Preview functionality to test your website while developing.
+
+🎨 Themes
+
+Available themes:
+
+SleepCoding Dark
+Midnight
+Light
+
+Change them from the IDE settings.
+
+📦 Package Manager
+
+Node.js:
+
+npm install package-name
+npm uninstall package-name
+npm run dev
+npm run build
+
+Python:
+
+pip install package-name
+🔗 Collaboration
+
+SleepCoding includes:
+
+P2P collaboration
+Shared editing
+Remote cursors
+Remote selections
+Collaborative chat
+
+Network configuration may affect P2P connections.
+
+🛠️ Build Windows Installer
+
+After testing the development version:
+
 npm run build:win
 
-Or, with a valid lockfile:
+Output:
 
-Remove-Item -Recurse -Force node_modules, dist -ErrorAction SilentlyContinue
-npm ci
-npm run build:win
+dist/
 
-Artifacts are created in dist/:
+Typical files:
 
 SleepCoding-Setup-1.7.1.exe
 SleepCoding-Portable-1.7.1.exe
 
-⌨️ Basic Usage
+Use the Setup version for a normal installation.
 
-Open Folder — choose a workspace directory from the Explorer.
-
-Open a file — click it in Explorer; it opens as an editor tab.
-
-Command Palette — use the command palette to search IDE actions.
-
-Split editor — Ctrl+Shift+2 for two groups, Ctrl+Shift+3 for three groups.
-
-Terminal — open the integrated terminal and run normal shell commands.
-
-Run Node/Python — open a supported source file and use the Run action.
-
-Debug Node — start a Node debug session, set breakpoints by clicking the editor gutter, then use Continue/Step controls.
-
-Git — open a Git repository as your project and use the Git panel for status, staging, commit, branch, pull and push workflows.
-
-Markdown — open a .md file and use Markdown Preview.
-
-HTML/CSS — use the local preview/live-server workflow for web projects.
-
-Themes — switch between SleepCoding Dark, Midnight and Light in settings/appearance controls.
-
-🌿 Git Workflow
-
-Create or open a Git repository:
-
-git clone https://github.com/USERNAME/REPOSITORY.git
-cd REPOSITORY
-
-Then open that folder in SleepCoding.
-
-Useful Git commands if you prefer the terminal:
-
-git status
-git add .
-git commit -m "Your message"
-git push
-
-Git credentials are handled by Git/your configured GitHub authentication, not by SleepCoding itself.
-
-📦 Useful npm Commands
-
-npm start          Run the IDE
-npm run server     Start the collaboration/server component
-npm run rebuild    Rebuild native node-pty dependencies
-npm run icon       Generate/convert application icons
-npm run build:win  Build the Windows installer + portable app
-npm run dist       Alias for the Windows build
-
+⚙️ Useful Commands
+npm install
+npm start
+npm run rebuild
+npm run build:win
+npx electron --version
+npm audit
 ⚠️ Troubleshooting
-
 Electron failed to install correctly
 
 Run:
 
-npm install-scripts approve electron node-pty
 npm config set ignore-scripts false
+npm install-scripts approve electron node-pty
+
+Then:
+
 Remove-Item -Recurse -Force node_modules
 npm install
-npm start
+node-pty build error
 
-node-pty build errors
+Install:
 
-Install Visual Studio 2022 Build Tools with Desktop development with C++, then reinstall dependencies.
+Visual Studio Build Tools 2022 → Desktop development with C++
 
+Then:
+
+npm run rebuild
 monaco is not defined
 
-Use the current 1.7.1 build. Monaco is initialized as part of the startup pipeline before editor enhancement features are created.
+Make sure you are using the latest project version and start the IDE with:
 
-npm audit reports vulnerabilities
+npm start
 
-Do not run npm audit fix --force during initial setup. It can introduce breaking dependency changes. Get the IDE running first and update dependencies deliberately.
-
-npm blocks install scripts
-
-Check:
-
-npm config get ignore-scripts
-
-If it returns true:
-
-npm config set ignore-scripts false
-
-Then reinstall dependencies.
+The startup system waits for Monaco before initializing editor features.
 
 📁 Project Structure
-
 SleepCoding-IDE/
-├─ main.js          Electron main process
-├─ preload.js       Secure renderer bridge
-├─ server.js        Local/collaboration server
-├─ src/             UI, editor and IDE code
-├─ scripts/         Build and native-module helpers
-├─ build/           Build resources and icon files
-├─ package.json     Dependencies and build configuration
-└─ README.md        This file
+├── main.js
+├── preload.js
+├── app.js
+├── server.js
+├── index.html
+├── ide.css
+├── package.json
+├── package-lock.json
+├── assets/
+└── dist/
+🗺️ Roadmap
 
-📌 Notes
+Future improvements include:
 
-Windows is the primary supported platform for this release. Do not copy node_modules from another operating system; native dependencies such as node-pty must be installed/built on the target machine.
+Variables / Locals / Watch debugger panels
+Conditional breakpoints
+Advanced debugging UI
+Better project indexing
+More language support
+Improved extensions
+Better Git visualisation
+Improved collaboration
+Performance improvements for large projects
+💙 SleepCoding
 
-For bug reports, include your Windows version, Node.js version, npm version, the command you ran, and the full terminal/DevTools error.
+SleepCoding is a modern, lightweight IDE focused on a clean interface, fast development workflow and useful developer tools.
 
-License
+⭐ Star the repository if you like the project.
 
-MIT — see the project license for details.
+GitHub:
+https://github.com/ofti335-prog/SleepCoding-IDE

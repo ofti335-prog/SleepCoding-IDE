@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' blob: data:; script-src 'self' blob: 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; font-src 'self' data:; connect-src 'self' blob: ws://localhost:* ws://127.0.0.1:* http://localhost:* http://127.0.0.1:* wss://0.peerjs.com https://0.peerjs.com; worker-src 'self' blob:; frame-src http://localhost:* http://127.0.0.1:*;">
+<title>SleepCoding</title>
+<link rel="stylesheet" href="css/ide.css">
+<link rel="stylesheet" href="../node_modules/@xterm/xterm/css/xterm.css">
+</head>
+<body>
+
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+
+  <header id="titlebar">
+    <div class="tb-left">
+      <span class="logo">☾</span>
+      <nav id="menus">
+        <button class="menu-btn" data-menu="file">File</button>
+        <button class="menu-btn" data-menu="edit">Edit</button>
+        <button class="menu-btn" data-menu="view">View</button>
+        <button class="menu-btn" data-menu="help">Help</button>
+      </nav>
+    </div>
+    <div id="tb-title">SleepCoding</div>
+    <div class="tb-right">
+      <button id="btn-min" class="tb-btn" title="Minimize"></button>
+      <button id="btn-max" class="tb-btn" title="Maximize"></button>
+      <button id="btn-close" class="tb-btn tb-close" title="Close"></button>
+    </div>
+  </header>
+
+  <div id="workbench">
+    <nav id="activitybar">
+      <button class="ab-btn active" data-view="explorer" title="Explorer"></button>
+      <button class="ab-btn" data-view="search" title="Search"></button>
+      <button class="ab-btn" data-view="git" title="Source Control"></button>
+      <button class="ab-btn" data-view="collab" title="Collaboration"></button>
+      <button class="ab-btn" data-view="preview" title="Live Preview"></button>
+      <div class="ab-spacer"></div>
+      <button class="ab-btn" data-view="settings" title="Settings"></button>
+    </nav>
+
+    <aside id="sidebar">
+      <div class="view active" id="view-explorer">
+        <div class="view-header"><span>EXPLORER</span></div>
+        <div class="view-toolbar" id="workspace-bar" hidden>
+          <span id="ws-label" class="ws-label"></span>
+          <span class="view-actions">
+            <button id="btn-new-file" title="New File"></button>
+            <button id="btn-new-folder" title="New Folder"></button>
+            <button id="btn-refresh" title="Refresh"></button>
+          </span>
+        </div>
+        <button id="btn-open-folder" class="big-btn">📂 &nbsp;Open Folder</button>
+        <div id="filetree" class="view-body"></div>
+      </div>
+
+      <div class="view" id="view-search">
+        <div class="view-header"><span>SEARCH</span></div>
+        <div class="search-box">
+          <input id="search-input" placeholder="Search in files…" spellcheck="false">
+          <button id="btn-search-case" title="Match case">Aa</button>
+          <button id="btn-search-regex" title="Regular expression">.*</button>
+        </div>
+        <div id="search-results" class="view-body"></div>
+      </div>
+
+      <div class="view" id="view-git">
+        <div class="view-header"><span>SOURCE CONTROL</span>
+          <span class="view-actions"><button id="btn-git-refresh" title="Refresh"></button></span>
+        </div>
+        <div class="sc-top">
+          <select id="git-branch" class="sc-select" spellcheck="false"></select>
+          <button id="btn-git-init" class="big-btn hidden">Initialize Repository</button>
+          <textarea id="git-msg" rows="2" placeholder="Commit message (Ctrl+Enter)" spellcheck="false"></textarea>
+          <div class="sc-btnrow">
+            <button id="btn-git-commit" class="sc-btn primary">✓ Commit</button>
+            <button id="btn-git-push" class="sc-btn">↑ Push</button>
+            <button id="btn-git-pull" class="sc-btn">↓ Pull</button>
+            <button id="btn-git-publish" class="sc-btn gh">⬢ Publish</button>
+          </div>
+        </div>
+        <div id="git-lists" class="view-body">
+          <div class="sc-title hidden" id="git-staged-title">STAGED <span id="git-staged-n"></span></div>
+          <div id="git-staged"></div>
+          <div class="sc-title hidden" id="git-changes-title">CHANGES <span id="git-changes-n"></span></div>
+          <div id="git-changes"></div>
+          <div id="git-empty" class="search-info"></div>
+        </div>
+      </div>
+
+      <div class="view" id="view-collab">
+        <div class="view-header"><span>COLLABORATION</span></div>
+        <div class="cl-body view-body">
+          <div id="cl-setup">
+            <label class="cl-lab">Your name <input id="cl-name" maxlength="24" placeholder="Guest"></label>
+            <button id="cl-create" class="big-btn">✦ &nbsp;Create session (this workspace)</button>
+            <div class="cl-or">— or —</div>
+            <label class="cl-lab">Access code
+              <textarea id="cl-joincode" rows="3" placeholder="SC1.xxxxxx.yyyyyy" spellcheck="false"></textarea>
+            </label>
+            <button id="cl-join" class="big-btn">➜ &nbsp;Join session</button>
+            <p class="cl-hint">P2P link — no server stores your files. The code contains the encryption key; share it only with your team.</p>
+          </div>
+          <div id="cl-active" class="hidden">
+            <div class="cl-room">Room <b id="cl-roomid"></b> · <span id="cl-role"></span></div>
+            <label class="cl-lab">Invite code <textarea id="cl-code" rows="3" readonly spellcheck="false"></textarea></label>
+            <div class="cl-btnrow">
+              <button id="cl-copy" class="sc-btn">⧉ Copy code</button>
+              <button id="cl-resend" class="sc-btn">↻ Resend files</button>
+            </div>
+            <div class="cl-people-title">TEAM</div>
+            <div id="cl-people"></div>
+            <div class="cl-people-title">CHAT</div>
+            <div id="cl-chatlog"></div>
+            <div class="cl-chatline"><input id="cl-chatin" placeholder="Message…" spellcheck="false"><button id="cl-chatsend">➤</button></div>
+            <div id="cl-status" class="cl-status"></div>
+            <button id="cl-leave" class="sc-btn danger">✕ Leave session</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="view" id="view-preview">
+        <div class="view-header"><span>LIVE PREVIEW</span></div>
+        <div class="preview-controls">
+          <p>Runs <b>server.js</b> on your workspace with WebSocket hot-reload.</p>
+          <button id="btn-preview-toggle" class="big-btn">▶ Start Live Server</button>
+          <button id="btn-preview-open-browser" class="big-btn">↗ Open in Browser</button>
+          <p id="preview-port-label" class="dim"></p>
+        </div>
+      </div>
+
+      <div class="view" id="view-settings">
+        <div class="view-header"><span>SETTINGS</span></div>
+        <div class="settings-body">
+          <label>Visual effects
+            <select id="set-fx">
+              <option value="auto">Auto (recommended)</option>
+              <option value="high">High — Liquid Glass</option>
+              <option value="balanced">Balanced</option>
+              <option value="perf">Performance</option>
+            </select>
+          </label>
+          <label><input type="checkbox" id="set-autosave"> Auto Save</label>
+          <label><input type="checkbox" id="set-format"> Format on Save</label>
+          <label><input type="checkbox" id="set-wrap"> Word Wrap</label>
+          <label><input type="checkbox" id="set-minimap"> Minimap</label>
+          <label>Font size <input type="number" id="set-fontsize" min="10" max="28"></label>
+          <label>Tab size <input type="number" id="set-tabsize" min="2" max="8"></label>
+          <button id="set-reset" class="big-btn">Reset defaults</button>
+        </div>
+      </div>
+    </aside>
+
+    <div id="resizer-v"></div>
+
+    <main id="main-area">
+      <div id="editor-row">
+        <div id="editor-zone">
+          <div id="tabs"></div>
+          <div id="breadcrumbs"><span id="bc-spacer" class="bc-spacer"></span><button id="btn-run" class="run-btn hidden" title="Run (F5)">▶ Run</button></div>
+          <div id="editor-container">
+            <div id="welcome">
+              <div class="welcome-logo" aria-label="SleepCoding">☾ SleepCoding</div>
+              <div class="welcome-sub">A calm, fast workspace for code, Git, preview and P2P collaboration.</div>
+              <div class="welcome-keys">
+                <div><kbd>F5</kbd> Run Python / Node file</div>
+                <div><kbd>Ctrl</kbd>+<kbd>P</kbd> Quick open file</div>
+                <div><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> Command palette</div>
+                <div><kbd>Ctrl</kbd>+<kbd>S</kbd> Save</div>
+                <div><kbd>Ctrl</kbd>+<kbd>`</kbd> Terminal</div>
+              </div>
+              <button id="btn-welcome-open" class="big-btn">📂 Open Folder</button>
+              <div id="welcome-recent" class="welcome-recent hidden">
+                <div class="wr-title">RECENT FOLDERS</div>
+                <div id="welcome-recent-list"></div>
+              </div>
+            </div>
+            <div id="media-view" class="hidden"><img id="media-img" alt=""></div>
+            <div id="diff-container" class="hidden"></div>
+            <textarea id="fallback-editor" class="hidden" spellcheck="false" wrap="off"></textarea>
+          </div>
+        </div>
+
+        <div id="preview-pane" class="hidden">
+          <div class="preview-bar">
+            <input id="preview-url" readonly spellcheck="false">
+            <button id="btn-preview-reload" title="Reload">⟳</button>
+            <button id="btn-preview-external" title="Open in browser">↗</button>
+            <button id="btn-preview-close" title="Close">✕</button>
+          </div>
+          <iframe id="preview-frame"></iframe>
+        </div>
+      </div>
+
+      <div id="resizer-h"></div>
+
+      <div id="panel">
+        <div id="panel-tabs">
+          <button class="panel-tab active" data-panel="terminal">TERMINAL</button>
+          <button class="panel-tab" data-panel="problems">PROBLEMS</button>
+          <button class="panel-tab" data-panel="output">OUTPUT</button>
+          <span class="panel-actions"><button id="btn-panel-close" title="Close">✕</button></span>
+        </div>
+        <div id="panel-body">
+          <div id="terminal" class="panel-page active">
+            <div id="xterm-host" class="hidden"></div>
+            <div id="term-legacy" class="hidden">
+              <div id="term-output"></div>
+              <div id="term-input-line">
+                <span id="term-prompt">$</span>
+                <input id="term-input" spellcheck="false" autocomplete="off">
+              </div>
+            </div>
+          </div>
+          <div id="problems" class="panel-page"></div>
+          <div id="output" class="panel-page"><pre id="output-text"></pre></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <footer id="statusbar">
+    <span id="sb-errors" title="Errors">✖ 0</span>
+    <span id="sb-warnings" title="Warnings">⚠ 0</span>
+    <span id="sb-branch" title="Git branch"></span>
+    <span id="sb-folder"></span>
+    <span class="sb-spacer"></span>
+    <span id="sb-port"></span>
+    <span id="sb-cursor"></span>
+    <span id="sb-indent"></span>
+    <span>UTF-8</span>
+    <span>LF</span>
+    <span id="sb-lang"></span>
+    <span>SleepCoding 1.7</span>
+  </footer>
+
+  <div id="palette" class="hidden">
+    <div id="palette-box">
+      <input id="palette-input" placeholder="Type '>' for commands, or file name…" spellcheck="false">
+      <div id="palette-list"></div>
+    </div>
+  </div>
+
+  <div id="git-dialog" class="hidden">
+    <div class="gd-box">
+      <div class="gd-title">⬢ Publish to GitHub</div>
+      <label>Personal Access Token (needs <b>repo</b> scope)
+        <a id="gp-token-link" class="gd-link">create a token →</a>
+        <input id="gp-token" type="password" placeholder="ghp_…" spellcheck="false" autocomplete="off">
+      </label>
+      <label>Repository name <input id="gp-name" spellcheck="false"></label>
+      <label>Description <input id="gp-desc" spellcheck="false"></label>
+      <label class="gd-check"><input type="checkbox" id="gp-private"> Private repository</label>
+      <div id="gp-err" class="gd-err hidden"></div>
+      <div class="gd-btns">
+        <button id="gp-cancel">Cancel</button>
+        <button id="gp-submit" class="primary">Create &amp; Push</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="ctx-menu" class="hidden"></div>
+  <div id="toast" class="hidden"></div>
+
+  <div id="boot-error" class="hidden">
+    <div class="be-box">
+      <div id="be-title">Startup problem</div>
+      <ul id="be-list"></ul>
+      <div class="be-hint">Press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd> to open DevTools for full details.</div>
+    </div>
+  </div>
+
+  <script src="../node_modules/@xterm/xterm/lib/xterm.js"></script>
+  <script src="../node_modules/@xterm/addon-fit/lib/addon-fit.js"></script>
+  <script src="../node_modules/peerjs/dist/peerjs.min.js"></script>
+  <script src="../node_modules/fflate/umd/index.js"></script>
+  <script src="../node_modules/monaco-editor/min/vs/loader.js"></script>
+  <script src="js/collab.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

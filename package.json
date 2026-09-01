@@ -1,0 +1,80 @@
+{
+  "name": "sleepcoding-ide",
+  "productName": "SleepCoding",
+  "version": "1.7.1",
+  "description": "SleepCoding — adaptive Electron IDE with Monaco, Node debugging, split editor and P2P collaboration",
+  "main": "main.js",
+  "author": "SleepCoding",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "server": "node server.js",
+    "rebuild": "node scripts/rebuild-pty.js",
+    "icon": "node scripts/make-icon.js && node scripts/convert-icon.js",
+    "dist": "npm run build:win",
+    "build:win": "npm run icon && node scripts/fix-wincodesign.js && npm run rebuild && electron-builder --win"
+  },
+  "dependencies": {
+    "@xterm/addon-fit": "^0.10.0",
+    "@xterm/xterm": "^5.5.0",
+    "chokidar": "^3.6.0",
+    "express": "^4.19.2",
+    "fflate": "^0.8.2",
+    "monaco-editor": "^0.47.0",
+    "node-pty": "^1.0.0",
+    "peerjs": "^1.5.2",
+    "ws": "^8.17.1"
+  },
+  "devDependencies": {
+    "electron": "^30.0.9",
+    "electron-builder": "^24.13.3",
+    "node-gyp": "^10.2.0",
+    "png2icons": "^2.0.1"
+  },
+  "build": {
+    "appId": "com.sleepcoding.ide",
+    "productName": "SleepCoding",
+    "copyright": "Copyright © 2026 SleepCoding",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "server.js",
+      "src/**/*",
+      "build/icon.ico",
+      "package.json"
+    ],
+    "asarUnpack": [
+      "**/node_modules/node-pty/**",
+      "**/node_modules/monaco-editor/**"
+    ],
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        {
+          "target": "nsis"
+        },
+        {
+          "target": "portable"
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "SleepCoding",
+      "artifactName": "SleepCoding-Setup-${version}.${ext}",
+      "uninstallDisplayName": "SleepCoding ${version}"
+    },
+    "portable": {
+      "artifactName": "SleepCoding-Portable-${version}.${ext}"
+    },
+    "npmRebuild": true
+  }
+}
